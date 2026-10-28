@@ -8,12 +8,12 @@ window.SITE = {
     {
       name: "Creativity", tag: "Creative community", est: "Established October 2026",
       desc: "A server where your creativity never ends. Share what you make, discuss ideas with other members and show the things you build. Open to everyone.",
-      link: "https://discord.gg/Au4Mx7CaCq", color: "#C71F63", image: "images/creativity.webp", fit: "contain"
+      link: "https://discord.gg/Au4Mx7CaCq", guild: "1564451031126114325", color: "#C71F63", image: "images/creativity.webp", fit: "contain"
     },
     {
       name: "Cyflixel", tag: "Minecraft community", est: "Established May 2026",
       desc: "The official Cyflixel community for Minecraft players. Get announcements and updates, join exclusive events and meet an active, welcoming community.",
-      link: "https://discord.gg/KwAmfyJsKp", color: "#1B4F8F", image: "images/cyflixel.webp", fit: "cover"
+      link: "https://discord.gg/KwAmfyJsKp", guild: "1500084302254444676", color: "#1B4F8F", image: "images/cyflixel.webp", fit: "cover"
     }
   ],
   values: [

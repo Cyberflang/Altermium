@@ -102,3 +102,16 @@ input[type=color]{padding:2px;height:40px;width:100%}
   nav{display:none}
 }
 @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.card{animation:none}body,.btn{transition:none}}
+
+/* live Discord stats */
+.live{width:100%;margin:-6px 0 26px;font-size:.92rem;color:var(--muted)}
+.live[hidden]{display:none}
+.avs{display:flex;align-items:center;padding-left:8px}
+.av{width:32px;height:32px;margin-left:-8px;border-radius:50%;object-fit:cover;background:var(--line);box-shadow:0 0 0 2px var(--surf)}
+.av.online{box-shadow:0 0 0 2px var(--surf),0 0 0 4px #23A55A}
+.av.idle{box-shadow:0 0 0 2px var(--surf),0 0 0 4px #F0B232}
+.av.dnd{box-shadow:0 0 0 2px var(--surf),0 0 0 4px #F23F43}
+.more{margin-left:10px;font-weight:600;color:var(--ink)}
+.live p{margin:14px 0 4px;font-weight:600;color:var(--ink)}
+.live ul{display:flex;flex-wrap:wrap;gap:4px 16px}
+.live li b{color:var(--c)}

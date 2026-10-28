@@ -49,7 +49,8 @@ function renderProjects() {
       <div class="body">
         <h3>${esc(p.name)}<span>${esc(p.tag)}</span></h3>
         <p>${esc(p.desc)}</p>
-        <ul class="meta" data-link="${esc(p.link)}"><li>${esc(p.est)}</li><li class="m" hidden></li><li class="o" hidden></li></ul>
+        <ul class="meta" data-link="${esc(p.link)}" data-guild="${esc(p.guild)}"><li>${esc(p.est)}</li><li class="m" hidden></li><li class="o" hidden></li></ul>
+        <div class="live" hidden></div>
         <a class="btn c" href="${esc(p.link)}" rel="noopener">Join ${esc(p.name)}</a>
       </div>
     </article>`).join('');
@@ -58,21 +59,40 @@ function renderProjects() {
   counts();
 }
 
-/* live Discord counts (hidden if Discord does not answer) */
+/* live Discord stats: invite counts + server widget (online members, voice, activity) */
+const nf = n => n.toLocaleString('en-US');
+const getJSON = async u => { const r = await fetch(u); if (!r.ok) throw new Error(r.status); return r.json(); };
+function liveHtml(w) {
+  const ms = w.members || [], vc = {}, games = {};
+  ms.forEach(m => {
+    if (m.channel_id) vc[m.channel_id] = (vc[m.channel_id] || 0) + 1;
+    if (m.game && m.game.name) games[m.game.name] = (games[m.game.name] || 0) + 1;
+  });
+  const avs = ms.slice(0, 14).map(m => `<img class="av ${esc(m.status)}" src="${esc(m.avatar_url)}" alt="" title="${esc(m.username)}">`).join('')
+    + (ms.length > 14 ? `<span class="more">+${ms.length - 14}</span>` : '');
+  const voice = (w.channels || []).filter(c => vc[c.id]).map(c => `<li>${esc(c.name)} <b>${vc[c.id]}</b></li>`).join('');
+  const act = Object.entries(games).sort((x, y) => y[1] - x[1]).slice(0, 3).map(([n, c]) => `<li>${c} playing ${esc(n)}</li>`).join('');
+  return (ms.length ? `<div class="avs">${avs}</div>` : '') + (voice ? `<p>In voice now</p><ul>${voice}</ul>` : '') + (act ? `<p>Activity</p><ul>${act}</ul>` : '');
+}
 async function counts() {
-  let total = 0, any = false;
+  let members = 0, online = 0, any = false;
   await Promise.all(QA('.meta').map(async ul => {
+    const a = ul.querySelector('.m'), o = ul.querySelector('.o'), live = ul.parentElement.querySelector('.live');
+    let on = null;
     const m = /(?:discord\.gg\/|discord(?:app)?\.com\/invite\/)([\w-]+)/i.exec(ul.dataset.link);
-    if (!m) return;
-    try {
-      const res = await fetch(`https://discord.com/api/v9/invites/${m[1]}?with_counts=true`);
-      if (!res.ok) return;
-      const d = await res.json(), a = ul.querySelector('.m'), o = ul.querySelector('.o');
-      if (typeof d.approximate_member_count === 'number') { a.textContent = d.approximate_member_count.toLocaleString('en-US') + ' members'; a.hidden = false; total += d.approximate_member_count; any = true; }
-      if (typeof d.approximate_presence_count === 'number') { o.textContent = d.approximate_presence_count.toLocaleString('en-US') + ' online now'; o.hidden = false; }
+    if (m) try {
+      const d = await getJSON(`https://discord.com/api/v9/invites/${m[1]}?with_counts=true`);
+      if (typeof d.approximate_member_count === 'number') { a.textContent = nf(d.approximate_member_count) + ' members'; a.hidden = false; members += d.approximate_member_count; any = true; }
+      if (typeof d.approximate_presence_count === 'number') on = d.approximate_presence_count;
     } catch (e) { /* leave hidden */ }
+    if (ul.dataset.guild) try {
+      const w = await getJSON(`https://discord.com/api/guilds/${ul.dataset.guild}/widget.json`);
+      if (typeof w.presence_count === 'number') on = w.presence_count;
+      live.innerHTML = liveHtml(w); live.hidden = !live.innerHTML;
+    } catch (e) { /* widget off or unreachable */ }
+    if (on !== null) { o.textContent = nf(on) + ' online now'; o.hidden = false; online += on; any = true; }
   }));
-  if (any) { const t = Q('#total'); t.textContent = total.toLocaleString('en-US') + ' members across our communities'; t.hidden = false; }
+  if (any) { const t = Q('#total'); t.textContent = (members ? nf(members) + ' members, ' : '') + nf(online) + ' online now, across our communities'; t.hidden = false; }
 }
 
 /* drawer */
@@ -90,7 +110,7 @@ const renderList = () => Q('#plist').innerHTML = S.projects.map((p, i) => `<li><
 function openForm(i) {
   const p = S.projects[i] || { color: S.theme.accent };
   f.hidden = false; E.idx.value = i ?? '';
-  E.pn.value = p.name || ''; E.pt.value = p.tag || ''; E.pd.value = p.desc || ''; E.pe.value = p.est || ''; E.pl.value = p.link || ''; E.pc.value = p.color; E.pp.value = '';
+  E.pn.value = p.name || ''; E.pt.value = p.tag || ''; E.pd.value = p.desc || ''; E.pe.value = p.est || ''; E.pl.value = p.link || ''; E.pg.value = p.guild || ''; E.pc.value = p.color; E.pp.value = '';
   img = p.image || ''; E.pn.focus();
 }
 Q('#add').onclick = () => openForm();
@@ -108,7 +128,7 @@ E.pp.onchange = () => {
 f.onsubmit = e => {
   e.preventDefault();
   const old = S.projects[E.idx.value] || {};
-  const p = { ...old, name: E.pn.value.trim(), tag: E.pt.value.trim(), desc: E.pd.value.trim(), est: E.pe.value.trim(), link: E.pl.value.trim(), color: E.pc.value, image: img, fit: old.fit || 'contain' };
+  const p = { ...old, name: E.pn.value.trim(), tag: E.pt.value.trim(), desc: E.pd.value.trim(), est: E.pe.value.trim(), link: E.pl.value.trim(), guild: E.pg.value.trim(), color: E.pc.value, image: img, fit: old.fit || 'contain' };
   if (E.idx.value === '') S.projects.push(p); else S.projects[+E.idx.value] = p;
   save(); f.hidden = true; renderProjects(); renderList();
 };
@@ -120,3 +140,4 @@ Q('#export').onclick = () => {
 };
 
 applyTheme(); renderProjects(); renderList();
+setInterval(counts, 90000); // refresh live stats every 90 seconds
