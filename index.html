@@ -3,81 +3,68 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Altermium: studios building games, software and media</title>
-<meta name="description" content="Altermium is a group of studios building games, software and media for online communities.">
+<title>Altermium: we build and run online communities</title>
+<meta name="description" content="Altermium is the organization behind Creativity and Cyflixel, two Discord communities.">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%232563EB'/%3E%3Cpath fill='%23fff' fill-rule='evenodd' d='M16 6 7 26h4.5l1.6-4h5.8l1.6 4H25L16 6Zm0 9 1.9 4.5h-3.8L16 15Z'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <header class="wrap top">
-  <a class="brand" href="#top" aria-label="Altermium home">
-    <span class="mark"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M16 3 4 29h6l2.2-5h7.6l2.2 5h6L16 3Zm0 12 2.6 6h-5.2L16 15Z"/></svg></span>Altermium
-  </a>
-  <nav aria-label="Main"><a href="#projects">Projects</a><a href="#team">Team</a><a href="#contact">Contact</a></nav>
+  <a class="brand" href="#top" data-t="name"></a>
+  <nav aria-label="Main"><a href="#communities">Communities</a><a href="#about">About</a><a href="#founder">Founder</a><a href="#contact">Contact</a></nav>
+  <button class="btn ghost sm" id="open" aria-expanded="false" aria-controls="panel">Customize</button>
 </header>
 
 <main id="top">
-  <section class="wrap hero">
-    <h1><span class="pill p1">ALTERMIUM</span><span class="pill p2">STUDIOS</span></h1>
-    <p class="tag">Games, software and media, built to last.</p>
-  </section>
-
-  <section class="wrap stats" aria-label="Altermium in numbers">
-    <div><b>5</b><span>years in operation</span></div>
-    <div><b>120K</b><span>monthly active players</span></div>
-    <div><b>4</b><span>studios under one roof</span></div>
-  </section>
-
-  <section class="wrap" id="projects">
-    <h2>Projects</h2>
-    <article class="proj" style="--c:#F5B83D">
-      <div class="tile" aria-hidden="true"><b>In</b></div>
-      <div>
-        <h3><strong>Altermium Interactive</strong> designs multiplayer games and community servers, then runs them live for years.</h3>
-        <div class="links"><a class="btn fill" href="#">Website</a><a class="btn" href="#">Discord</a><a class="btn" href="#">Telegram</a></div>
-      </div>
-    </article>
-    <article class="proj" style="--c:#6C8CFF">
-      <div class="tile" aria-hidden="true"><b>Sw</b></div>
-      <div>
-        <h3><strong>Altermium Software</strong> builds websites, platforms and tools that other teams can maintain after launch.</h3>
-        <div class="links"><a class="btn fill" href="#">Website</a><a class="btn" href="#">Discord</a><a class="btn" href="#">Telegram</a></div>
-      </div>
-    </article>
-    <article class="proj" style="--c:#E46AAE">
-      <div class="tile" aria-hidden="true"><b>De</b></div>
-      <div>
-        <h3><strong>Altermium Design</strong> creates brand identity, interfaces and motion for products that need a clear look.</h3>
-        <div class="links"><a class="btn fill" href="#">Website</a><a class="btn" href="#">Discord</a><a class="btn" href="#">Telegram</a></div>
-      </div>
-    </article>
-    <article class="proj" style="--c:#19D6C2">
-      <div class="tile" aria-hidden="true"><b>Sy</b></div>
-      <div>
-        <h3><strong>Altermium Systems</strong> provides hosting, security and monitoring for our projects and for client teams.</h3>
-        <div class="links"><a class="btn fill" href="#">Website</a><a class="btn" href="#">Discord</a><a class="btn" href="#">Telegram</a></div>
-      </div>
-    </article>
-  </section>
-
-  <section class="wrap" id="team">
-    <h2>Team</h2>
-    <div class="people">
-      <article class="person"><div><h3>Full Name</h3><p>Chief Executive Officer</p></div><a class="btn fill" href="#">Telegram</a></article>
-      <article class="person"><div><h3>Full Name</h3><p>Chief Technology Officer</p></div><a class="btn fill" href="#">Telegram</a></article>
+  <section class="hero"><div class="wrap hero-grid">
+    <div>
+      <h1 data-t="headline"></h1>
+      <p class="lead" data-t="lead"></p>
+      <div class="actions"><a class="btn" href="#communities">Our communities</a><a class="btn ghost" href="#contact">Contact</a></div>
+      <p class="total" id="total" hidden></p>
     </div>
+    <div class="stack" id="stack" aria-hidden="true"></div>
+  </div></section>
+
+  <section class="wrap sec" id="communities"><h2>Our communities</h2><div class="panels" id="projects"></div></section>
+
+  <section class="band" id="about"><div class="wrap"><h2>How we run communities</h2><div class="vals" id="values"></div></div></section>
+
+  <section class="wrap sec" id="founder"><h2>Founder</h2>
+    <div class="founder"><p class="name" id="fname"></p><p class="role" id="frole"></p></div>
   </section>
 </main>
 
 <footer class="wrap foot" id="contact">
-  <div>
-    <span class="mark big"><svg viewBox="0 0 32 32" aria-hidden="true"><path fill-rule="evenodd" d="M16 3 4 29h6l2.2-5h7.6l2.2 5h6L16 3Zm0 12 2.6 6h-5.2L16 15Z"/></svg></span>
-    <p class="copy">Altermium © 2026</p>
-    <p class="mail"><a href="mailto:hello@altermium.com">hello@altermium.com</a></p>
-  </div>
-  <div class="links"><a class="btn" href="#">Discord</a><a class="btn" href="#">Telegram</a><a class="btn fill" href="mailto:hello@altermium.com">Email us</a></div>
+  <div><p class="brand" data-t="name"></p><p class="note">To reach us, join one of our Discord servers and message the team.</p></div>
+  <div class="flinks" id="flinks"></div>
 </footer>
+
+<aside class="drawer" id="panel" aria-label="Customize" hidden>
+  <div class="dh"><h2>Customize</h2><button class="x" id="close" aria-label="Close">×</button></div>
+  <fieldset><legend>Theme</legend><div class="seg" id="mode"><button data-v="light">Light</button><button data-v="dark">Dark</button><button data-v="auto">Auto</button></div></fieldset>
+  <fieldset><legend>Accent color</legend><div class="sw" id="sw"></div><label class="pick">Custom color <input type="color" id="accent"></label></fieldset>
+  <fieldset><legend>Corners</legend><div class="seg" id="radius"><button data-v="sharp">Sharp</button><button data-v="soft">Soft</button><button data-v="round">Round</button></div></fieldset>
+  <div id="ed" hidden>
+    <fieldset><legend>Projects</legend><ul id="plist"></ul><button class="btn sm" id="add">Add project</button></fieldset>
+    <form id="pf" hidden>
+      <input type="hidden" name="idx">
+      <label>Name<input name="pn" required></label>
+      <label>Type<input name="pt" placeholder="Minecraft community"></label>
+      <label>Description<textarea name="pd" rows="4"></textarea></label>
+      <label>Established<input name="pe" placeholder="Established June 2026"></label>
+      <label>Link<input name="pl" type="url" placeholder="https://discord.gg/..."></label>
+      <label>Color<input name="pc" type="color"></label>
+      <label>Logo image<input name="pp" type="file" accept="image/*"></label>
+      <div class="row"><button class="btn sm" type="submit">Save project</button><button class="btn ghost sm" type="button" id="cancel">Cancel</button></div>
+    </form>
+  </div>
+  <div class="dfoot"><button class="btn ghost sm" id="reset">Reset</button><button class="btn sm" id="export" hidden>Export config.js</button></div>
+</aside>
+<script src="config.js"></script>
+<script src="script.js"></script>
 </body>
 </html>
