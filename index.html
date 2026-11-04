@@ -5,7 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Altermium: games, mods, servers and communities</title>
 <meta name="description" content="Altermium makes Minecraft plugins, mods and servers, video games, apps and online communities like Creativity and Cyflixel.">
-<link rel="icon" type="image/png" href="images/logo.png">
+<link rel="icon" type="image/png" href="images/logo-t.png" media="(prefers-color-scheme: dark)">
+<link rel="icon" type="image/png" href="images/logo-t-dark.png" media="(prefers-color-scheme: light)">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -13,8 +14,8 @@
 </head>
 <body>
 <header class="wrap top">
-  <a class="brand" href="#top"><img class="logo" src="images/logo.png" alt=""><span data-t="name"></span></a>
-  <nav aria-label="Main"><a href="#make">What we make</a><a href="#updates">Updates</a><a href="#communities">Communities</a><a href="#about">About</a><a href="#founder">Founder</a><a href="#contact">Contact</a><a href="https://x.com/AltermiumTeam" rel="noopener">X</a></nav>
+  <a class="brand" href="#top"><img class="logo" src="images/logo-t.png" alt=""><span data-t="name"></span></a>
+  <nav aria-label="Main"><a href="#make">What we make</a><a href="#updates">Updates</a><a href="#communities">Communities</a><a href="#about">About</a><a href="#founder">Team</a><a href="#contact">Contact</a><a href="https://x.com/AltermiumTeam" rel="noopener">X</a></nav>
   <button class="btn ghost sm" id="open" aria-expanded="false" aria-controls="panel">Customize</button>
 </header>
 
@@ -40,13 +41,14 @@
 
   <section class="band" id="about"><div class="wrap"><h2>How we work</h2><div class="vals" id="values"></div></div></section>
 
-  <section class="wrap sec" id="founder"><h2>Founder</h2>
+  <section class="wrap sec" id="founder"><h2>Team</h2>
     <div class="founder"><p class="name" id="fname"></p><p class="role" id="frole"></p></div>
+    <div class="team" id="tlist"></div>
   </section>
 </main>
 
 <footer class="wrap foot" id="contact">
-  <div><p class="brand"><img class="logo" src="images/logo.png" alt=""><span data-t="name"></span></p><p class="note">To reach us, message @AltermiumTeam on X or join one of our Discord servers.</p></div>
+  <div><p class="brand"><img class="logo" src="images/logo-t.png" alt=""><span data-t="name"></span></p><p class="note">To reach us, message @AltermiumTeam on X or join one of our Discord servers.</p></div>
   <div class="flinks" id="flinks"></div>
 </footer>
 
@@ -71,6 +73,8 @@
     </form>
     <fieldset><legend>Announcements</legend><ul id="nlist"></ul>
       <form id="nf"><label>Title<input name="t" required></label><label>Tag<input name="g" placeholder="Update"></label><label>Date<input name="d" type="date"></label><label>Text<textarea name="x" rows="3" required></textarea></label><label><span><input name="p" type="checkbox"> Pin to top</span></label><button class="btn sm" type="submit">Post announcement</button></form></fieldset>
+    <fieldset><legend>Team</legend><ul id="tmlist"></ul>
+      <form id="tf"><label>Name<input name="n" required></label><label>Role<input name="r" required placeholder="Plugin developer"></label><label>Bio<textarea name="b" rows="3"></textarea></label><label>Link<input name="l" type="url" placeholder="https://x.com/..."></label><button class="btn sm" type="submit">Add team member</button></form></fieldset>
     <fieldset><legend>Events</legend><ul id="elist"></ul>
       <form id="ef"><label>Title<input name="t" required></label><label>Starts<input name="d" type="datetime-local" required></label><label>Where<input name="w" placeholder="Discord, Minecraft server..."></label><label>Link<input name="l" type="url"></label><label>Text<textarea name="x" rows="3"></textarea></label><button class="btn sm" type="submit">Add event</button></form></fieldset>
   </div>

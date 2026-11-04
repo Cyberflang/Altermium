@@ -37,5 +37,7 @@ window.SITE = {
   ],
   // Events: date is YYYY-MM-DDTHH:MM (your local time). Past events hide automatically.
   events: [],
+  // Team members shown under the founder: { name, role, bio, link }
+  team: [],
   founder: { name: "Aryan Dahal", role: "Founder, Altermium" }
 };

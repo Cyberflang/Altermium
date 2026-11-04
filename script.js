@@ -1,8 +1,8 @@
 const D = window.SITE, KEY = 'altermium:v5', Q = s => document.querySelector(s), QA = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
-const base = () => ({ theme: { ...D.theme }, projects: structuredClone(D.projects), news: structuredClone(D.news || []), events: structuredClone(D.events || []) });
+const base = () => ({ theme: { ...D.theme }, projects: structuredClone(D.projects), news: structuredClone(D.news || []), events: structuredClone(D.events || []), team: structuredClone(D.team || []) });
 let S; try { S = JSON.parse(localStorage.getItem(KEY)) || base(); } catch (e) { S = base(); }
-S.theme = { ...D.theme, ...S.theme }; S.news ||= []; S.events ||= [];
+S.theme = { ...D.theme, ...S.theme }; S.news ||= []; S.events ||= []; S.team ||= [];
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { alert('Could not save. The logo image may be too large.'); } };
 
 /* color helpers */
@@ -133,7 +133,7 @@ f.onsubmit = e => {
   save(); f.hidden = true; renderProjects(); renderList();
 };
 Q('#export').onclick = () => {
-  const cfg = { ...D, theme: S.theme, projects: S.projects, news: S.news, events: S.events };
+  const cfg = { ...D, theme: S.theme, projects: S.projects, news: S.news, events: S.events, team: S.team };
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(['window.SITE = ' + JSON.stringify(cfg, null, 2) + ';\n'], { type: 'text/javascript' }));
   a.download = 'config.js'; a.click();
@@ -167,5 +167,14 @@ EF.onsubmit = e => { e.preventDefault(); const v = EF.elements; S.events.push({ 
 Q('#nlist').onclick = e => { const i = e.target.dataset.n; if (i && confirm('Delete this announcement?')) { S.news.splice(+i, 1); save(); renderNews(); renderEd2(); } };
 Q('#elist').onclick = e => { const i = e.target.dataset.n; if (i && confirm('Delete this event?')) { S.events.splice(+i, 1); save(); renderEvents(); renderEd2(); } };
 
-applyTheme(); renderProjects(); renderList(); renderNews(); renderEvents(); renderEd2();
+const TF = Q('#tf');
+function renderTeam() {
+  Q('#tlist').innerHTML = S.team.map(m => `<article class="tm"><h3>${esc(m.name)}</h3><p class="r">${esc(m.role)}</p>${m.bio ? `<p>${esc(m.bio)}</p>` : ''}${m.link ? `<a href="${esc(safe(m.link))}" rel="noopener">Profile</a>` : ''}</article>`).join('')
+    + `<a class="tm join" href="${esc(safe(S.projects[0] ? S.projects[0].link : ''))}" rel="noopener"><h3>Join the team</h3><p>We are looking for developers, builders, designers and moderators. Ask in our Discord.</p></a>`;
+  Q('#tmlist').innerHTML = S.team.map((m, i) => `<li><span>${esc(m.name)}</span><button data-n="${i}">Delete</button></li>`).join('');
+}
+TF.onsubmit = e => { e.preventDefault(); const v = TF.elements; S.team.push({ name: v.n.value.trim(), role: v.r.value.trim(), bio: v.b.value.trim(), link: v.l.value.trim() }); TF.reset(); save(); renderTeam(); };
+Q('#tmlist').onclick = e => { const i = e.target.dataset.n; if (i && confirm('Remove this team member?')) { S.team.splice(+i, 1); save(); renderTeam(); } };
+
+applyTheme(); renderProjects(); renderList(); renderNews(); renderEvents(); renderEd2(); renderTeam();
 setInterval(counts, 90000); // refresh live stats every 90 seconds
