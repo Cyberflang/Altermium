@@ -1,8 +1,16 @@
+<<<<<<< HEAD
 const D = window.SITE, KEY = 'altermium:v5', Q = s => document.querySelector(s), QA = s => [...document.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 const base = () => ({ theme: { ...D.theme }, projects: structuredClone(D.projects), news: structuredClone(D.news || []), events: structuredClone(D.events || []) });
 let S; try { S = JSON.parse(localStorage.getItem(KEY)) || base(); } catch (e) { S = base(); }
 S.theme = { ...D.theme, ...S.theme }; S.news ||= []; S.events ||= [];
+=======
+const D = window.SITE, KEY = 'altermium:v4', Q = s => document.querySelector(s), QA = s => [...document.querySelectorAll(s)];
+const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+const base = () => ({ theme: { ...D.theme }, projects: structuredClone(D.projects) });
+let S; try { S = JSON.parse(localStorage.getItem(KEY)) || base(); } catch (e) { S = base(); }
+S.theme = { ...D.theme, ...S.theme };
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) { alert('Could not save. The logo image may be too large.'); } };
 
 /* color helpers */
@@ -54,8 +62,13 @@ function renderProjects() {
         <a class="btn c" href="${esc(p.link)}" rel="noopener">Join ${esc(p.name)}</a>
       </div>
     </article>`).join('');
+<<<<<<< HEAD
   Q('#stack').innerHTML = '<div class="card lg"><img src="images/logo.png" alt=""></div>' + S.projects.slice(0, 2).map(p => `<div class="card" style="--c:${esc(p.color)}">${pic(p)}</div>`).join('');
   Q('#flinks').innerHTML = S.projects.map(p => `<a href="${esc(p.link)}" rel="noopener">${esc(p.name)}</a>`).join('') + `<a href="${esc(D.social.x)}" rel="noopener">X</a><span>© 2026 ${esc(D.name)}</span>`;
+=======
+  Q('#stack').innerHTML = S.projects.slice(0, 3).map(p => `<div class="card" style="--c:${esc(p.color)}">${pic(p)}</div>`).join('');
+  Q('#flinks').innerHTML = S.projects.map(p => `<a href="${esc(p.link)}" rel="noopener">${esc(p.name)}</a>`).join('') + `<span>© 2026 ${esc(D.name)}</span>`;
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a
   counts();
 }
 
@@ -133,12 +146,17 @@ f.onsubmit = e => {
   save(); f.hidden = true; renderProjects(); renderList();
 };
 Q('#export').onclick = () => {
+<<<<<<< HEAD
   const cfg = { ...D, theme: S.theme, projects: S.projects, news: S.news, events: S.events };
+=======
+  const cfg = { ...D, theme: S.theme, projects: S.projects };
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a
   const a = document.createElement('a');
   a.href = URL.createObjectURL(new Blob(['window.SITE = ' + JSON.stringify(cfg, null, 2) + ';\n'], { type: 'text/javascript' }));
   a.download = 'config.js'; a.click();
 };
 
+<<<<<<< HEAD
 /* announcements and events */
 const fd = d => new Date(d + (d.length === 10 ? 'T00:00' : '')).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
 const safe = u => /^https?:\/\//i.test(u) ? u : '#';
@@ -168,4 +186,7 @@ Q('#nlist').onclick = e => { const i = e.target.dataset.n; if (i && confirm('Del
 Q('#elist').onclick = e => { const i = e.target.dataset.n; if (i && confirm('Delete this event?')) { S.events.splice(+i, 1); save(); renderEvents(); renderEd2(); } };
 
 applyTheme(); renderProjects(); renderList(); renderNews(); renderEvents(); renderEd2();
+=======
+applyTheme(); renderProjects(); renderList();
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a
 setInterval(counts, 90000); // refresh live stats every 90 seconds

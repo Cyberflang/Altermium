@@ -9,7 +9,11 @@ a{color:inherit}
 .wrap{max-width:var(--max);margin:0 auto;padding-left:24px;padding-right:24px}
 
 .top{display:flex;align-items:center;gap:24px;height:76px}
+<<<<<<< HEAD
 .brand{display:flex;align-items:center;gap:12px;font-weight:700;font-size:1.3rem;letter-spacing:-.02em;text-decoration:none;margin-right:auto}
+=======
+.brand{font-weight:700;font-size:1.3rem;letter-spacing:-.02em;text-decoration:none;margin-right:auto}
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a
 nav{display:flex;gap:26px}
 nav a{text-decoration:none;color:var(--muted);font-weight:500;font-size:.95rem}
 nav a:hover{color:var(--ink)}
@@ -115,6 +119,7 @@ input[type=color]{padding:2px;height:40px;width:100%}
 .live p{margin:14px 0 4px;font-weight:600;color:var(--ink)}
 .live ul{display:flex;flex-wrap:wrap;gap:4px 16px}
 .live li b{color:var(--c)}
+<<<<<<< HEAD
 
 /* logo, offer, announcements, events */
 .logo{width:38px;height:38px;border-radius:10px;display:block;box-shadow:0 0 0 1px var(--line)}
@@ -149,3 +154,5 @@ input[type=color]{padding:2px;height:40px;width:100%}
 #nlist,#elist{margin-bottom:14px}
 @media (max-width:860px){.upd{grid-template-columns:1fr;gap:48px}}
 @media (prefers-reduced-motion:reduce){.card.lg img{animation:none}}
+=======
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a

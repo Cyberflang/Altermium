@@ -1,9 +1,14 @@
 // Edit this file to change the site content. Colors must be 6-digit hex like #2563EB.
 window.SITE = {
   name: "Altermium",
+<<<<<<< HEAD
   headline: "We make extraordinary games, mods and communities.",
   lead: "Altermium builds Minecraft plugins, mods and servers, video games, apps and online communities, including Creativity and Cyflixel.",
   social: { x: "https://x.com/AltermiumTeam" },
+=======
+  headline: "We build and run online communities.",
+  lead: "Altermium is the organization behind Creativity and Cyflixel: one community for people who make things, and one for Minecraft players.",
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a
   theme: { mode: "auto", accent: "#2563EB", radius: "soft" }, // mode: light | dark | auto. radius: sharp | soft | round
   projects: [
     {
@@ -22,6 +27,7 @@ window.SITE = {
     { title: "Share what you build", text: "Members post their creations, trade ideas and give each other feedback." },
     { title: "Active and up to date", text: "Announcements, updates and events keep each community moving." }
   ],
+<<<<<<< HEAD
   offer: [
     { title: "Minecraft plugins", text: "Custom plugins for servers and networks: ranks, parties, scoreboards, minigames and more." },
     { title: "Mods", text: "Mods that add new features and gameplay to the games people already love." },
@@ -37,5 +43,7 @@ window.SITE = {
   ],
   // Events: date is YYYY-MM-DDTHH:MM (your local time). Past events hide automatically.
   events: [],
+=======
+>>>>>>> cc5ba7347357ab2d541c01d77b8101a1d0cf3d1a
   founder: { name: "Aryan Dahal", role: "Founder, Altermium" }
 };
