@@ -13,6 +13,29 @@ window.SITE = {
     { n: "Ember", c: "#ff5a36" }, { n: "Aurora", c: "#2dd4bf" }, { n: "Ocean", c: "#3b82f6" }, { n: "Violet", c: "#8b5cf6" },
     { n: "Forest", c: "#22c55e" }, { n: "Sakura", c: "#f472b6" }, { n: "Gold", c: "#f5b301" }, { n: "Crimson", c: "#e11d48" }
   ],
+  mission: "Build worlds people want to live in, and the communities that keep them alive.",
+  divisions: [
+    { name: "Plugins and Mods", text: "Server software and game modifications for Minecraft networks.", cats: ["Plugins", "Mods"] },
+    { name: "Servers and Network", text: "Minecraft servers and networks we design, run and keep online.", cats: ["Servers"] },
+    { name: "Games", text: "Original video games, from prototypes to full releases.", cats: ["Games"] },
+    { name: "Apps and Bots", text: "Tools, apps and Discord bots for our players and members.", cats: ["Apps"] },
+    { name: "Communities", text: "Discord communities with events, announcements and moderation teams.", cats: ["Communities"] }
+  ],
+  values: [
+    { title: "Open to everyone", text: "Our communities welcome every member, whether you build, play or just want to talk." },
+    { title: "Share what you build", text: "Members post their creations, trade ideas and give each other feedback." },
+    { title: "Active and up to date", text: "Announcements, updates and events keep each community moving." }
+  ],
+  timeline: [
+    { y: "2023", t: "Altermium goes online", x: "The Altermium account joins X in January 2023." },
+    { y: "2026", t: "Cyflixel community established", x: "The official community for Cyflixel Minecraft players opens in May." },
+    { y: "2026", t: "Creativity community established", x: "A server for people who make things opens in October." },
+    { y: "2026", t: "New Altermium website", x: "Projects, journal, events, people and server status in one place." }
+  ],
+  // Open roles: { title, team, type, text, link }. Leave empty if none.
+  roles: [],
+  // Minecraft servers for the Status page: { name, ip }. Live player counts load from mcsrvstat.us.
+  servers: [],
   // Rank prefixes shown before names on the People page, in display order.
   ranks: { FOUNDER: "#ff5a36", DEV: "#6ab0ff", STAFF: "#8ddc7a" },
   projects: [

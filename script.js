@@ -15,11 +15,14 @@ const row = (p, i) => `<a class="row" href="#/work/${E(p.slug)}"><span class="n"
 const post = n => `<article class="post"><div class="pd"><time>${fd(n.date)}</time><span class="tg">${E(n.tag)}</span>${n.pin ? '<span class="pin">Pinned</span>' : ''}</div><div><h3>${E(n.title)}</h3><p>${E(n.text)}</p></div></article>`;
 const ics = e => 'data:text/calendar;charset=utf-8,' + encodeURIComponent(`BEGIN:VCALENDAR\r\nVERSION:2.0\r\nBEGIN:VEVENT\r\nDTSTART:${new Date(e.date).toISOString().replace(/[-:]|\.\d{3}/g, '')}\r\nSUMMARY:${e.title}\r\nLOCATION:${e.where || ''}\r\nEND:VEVENT\r\nEND:VCALENDAR`);
 const ev = (e, past) => { const t = new Date(e.date); return `<article class="ev${past ? ' past' : ''}"><div class="dt"><b>${pad(t.getDate())}</b>${t.toLocaleString('en-GB', { month: 'short' })}</div><div><h3>${E(e.title)}</h3>${e.text ? `<p>${E(e.text)}</p>` : ''}<p class="em">${t.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}${e.where ? ' / ' + E(e.where) : ''}${past ? '' : ` / in <span data-ts="${t.getTime()}">${cd(t - Date.now())}</span>`}</p>${past ? '' : `<p class="ln">${e.link ? `<a href="${E(U(e.link))}" rel="noopener">Join</a>` : ''}<a href="${ics(e)}" download="${E(e.title)}.ics">Add to calendar</a></p>`}</div></article>`; };
+const divs = () => `<div class="divs">${D.divisions.map(d => `<a class="dv" href="#/work/~${encodeURIComponent(d.cats[0])}"><i>${D.projects.filter(p => d.cats.includes(p.cat)).length} projects</i><h3>${E(d.name)}</h3><p>${E(d.text)}</p></a>`).join('')}</div>`;
 const FORMS = {
   news: ['news', [['title', 'Title'], ['tag', 'Tag'], ['date', 'Date', 'date'], ['text', 'Text', 'area'], ['pin', 'Pinned', 'chk']]],
   event: ['events', [['title', 'Title'], ['date', 'Starts', 'datetime-local'], ['where', 'Where'], ['link', 'Link'], ['text', 'Text', 'area']]],
   project: ['projects', [['name', 'Name'], ['cat', 'Category', 'cat'], ['status', 'Status', 'st'], ['year', 'Year'], ['short', 'One line'], ['desc', 'Description', 'area'], ['link', 'Link']]],
-  person: ['team', [['name', 'Name'], ['prefix', 'Prefix'], ['role', 'Role'], ['bio', 'Bio', 'area'], ['link', 'Link']]]
+  person: ['team', [['name', 'Name'], ['prefix', 'Prefix'], ['role', 'Role'], ['bio', 'Bio', 'area'], ['link', 'Link']]],
+  role: ['roles', [['title', 'Title'], ['team', 'Team'], ['type', 'Type'], ['text', 'Text', 'area'], ['link', 'Apply link']]],
+  server: ['servers', [['name', 'Name'], ['ip', 'Address']]]
 };
 
 const V = {
@@ -28,7 +31,8 @@ const V = {
     return `<section class="w hero"><div><p class="lab">Games / Mods / Servers / Communities</p><h1>${E(D.tagline)}</h1><p class="lead">${E(D.about)}</p><p class="cta"><a class="btn" href="#/work">See our work</a><a class="btn ghost" href="${E(U(D.social.x))}" rel="noopener">Follow on X</a></p></div><div class="mark"><img src="images/logo-t.png" alt=""></div></section>
 <section class="w stats"><div><b>${D.projects.length}</b>projects</div><div><b>${cats.length}</b>categories</div><div><b id="mem">&hellip;</b>community members</div><div><b>${up.length}</b>upcoming events</div></section>
 <section class="w sec">${H('01', 'Work', '<a href="#/work">All work</a>')}<div>${D.projects.slice(0, 6).map(row).join('')}</div></section>
-<section class="w sec cols"><div>${H('02', 'Journal', '<a href="#/journal">All posts</a>')}${posts().slice(0, 3).map(post).join('')}</div><div>${H('03', 'Events', '<a href="#/events">All events</a>')}${up.length ? up.slice(0, 2).map(e => ev(e)).join('') : '<p class="empty">No events scheduled yet.</p>'}</div></section>`;
+<section class="w sec cols"><div>${H('02', 'Journal', '<a href="#/journal">All posts</a>')}${posts().slice(0, 3).map(post).join('')}</div><div>${H('03', 'Events', '<a href="#/events">All events</a>')}${up.length ? up.slice(0, 2).map(e => ev(e)).join('') : '<p class="empty">No events scheduled yet.</p>'}</div></section>
+<section class="w sec">${H('05', 'Studio', '<a href="#/studio">About the studio</a>')}${divs()}</section>`;
   },
   work() { return `<section class="w sec">${H('01', 'Work')}<div class="tools"><div class="chips" id="chips"></div><input id="q" type="search" placeholder="Search projects" aria-label="Search projects"></div><div id="rows"></div></section>`; },
   proj(s) {
@@ -43,14 +47,22 @@ const V = {
     const o = Object.keys(D.ranks), t = [...D.team].sort((a, b) => o.indexOf(a.prefix) - o.indexOf(b.prefix));
     return `<section class="w sec">${H('04', 'People')}<div class="team">${t.map(m => `<article class="tm"><p class="pf" style="--p:${E(D.ranks[m.prefix] || 'var(--mut)')}">[${E(m.prefix)}]</p><h3>${E(m.name)}</h3><p class="r">${E(m.role)}</p>${m.bio ? `<p>${E(m.bio)}</p>` : ''}${m.link ? `<a href="${E(U(m.link))}" rel="noopener">Profile</a>` : ''}</article>`).join('')}<a class="tm join" href="${E(U(D.social.discord))}" rel="noopener"><p class="pf">[YOU?]</p><h3>Join the team</h3><p>We look for developers, builders, designers and moderators. Say hello in our Discord.</p></a></div></section>`;
   },
-  post() { return `<section class="w sec">${H('05', 'Post builder')}<p class="lead">Fill in the form, copy the snippet and paste it into the matching list in <code>config.js</code>, then push to GitHub.</p><div class="builder"><form id="bf"></form><div><pre id="out"></pre><button class="btn" id="cp" type="button">Copy snippet</button><p class="em" id="where"></p></div></div></section>`; },
+  studio() {
+    return `<section class="w sec">${H('05', 'Studio')}<p class="mis">${E(D.mission)}</p>${divs()}<h3 class="sub">Our values</h3><div class="vals">${D.values.map(v => `<div><h4>${E(v.title)}</h4><p>${E(v.text)}</p></div>`).join('')}</div><h3 class="sub">Timeline</h3>${D.timeline.map(t => `<div class="tl"><b>${E(t.y)}</b><div><h4>${E(t.t)}</h4><p>${E(t.x)}</p></div></div>`).join('')}<h3 class="sub">Press kit</h3><p class="kit"><a href="images/logo-t.png" download>Logo, white</a><a href="images/logo-t-dark.png" download>Logo, dark</a><a href="images/logo.png" download>Logo on black</a></p></section>`;
+  },
+  careers() {
+    const a = [['Developers', 'Java plugins, mods, bots and web.'], ['Builders', 'Maps, lobbies, arenas and worlds.'], ['Designers', 'Interfaces, art, logos and trailers.'], ['Moderators', 'Keep our communities friendly and active.']];
+    return `<section class="w sec">${H('06', 'Careers')}<p class="mis">Help us build Altermium.</p><p class="lead">We grow by finding people who love making things. Pick the area that fits you and say hello in our Discord.</p><div class="vals">${a.map(x => `<div><h4>${x[0]}</h4><p>${x[1]}</p></div>`).join('')}</div><h3 class="sub">Open roles</h3>${D.roles.length ? D.roles.map(r => `<article class="post"><div class="pd"><span class="tg">${E(r.team)}</span><span>${E(r.type)}</span></div><div><h3>${E(r.title)}</h3><p>${E(r.text)}</p>${r.link ? `<p class="ln"><a href="${E(U(r.link))}" rel="noopener">Apply</a></p>` : ''}</div></article>`).join('') : '<p class="empty">No specific roles are open right now, but we always want to hear from builders.</p>'}<p class="cta"><a class="btn" href="${E(U(D.social.discord))}" rel="noopener">Join our Discord</a><a class="btn ghost" href="${E(U(D.social.x))}" rel="noopener">Message us on X</a></p></section>`;
+  },
+  status() { return `<section class="w sec">${H('07', 'Status')}${D.servers.length ? '<div id="srv"></div>' : '<p class="empty">No servers listed yet. Add your server address to the servers list in config.js and live player counts will show here.</p>'}</section>`; },
+  post() { return `<section class="w sec">${H('08', 'Post builder')}<p class="lead">Fill in the form, copy the snippet and paste it into the matching list in <code>config.js</code>, then push to GitHub.</p><div class="builder"><form id="bf"></form><div><pre id="out"></pre><button class="btn" id="cp" type="button">Copy snippet</button><p class="em" id="where"></p></div></div></section>`; },
   nf() { return `<section class="w sec"><p class="lab">404</p><h1>Page not found</h1><p><a href="#/">Back to start</a></p></section>`; }
 };
 
 const B = {
   home() { Promise.all(D.projects.map(load)).then(a => { const n = a.reduce((s, x) => s + (x || 0), 0); if (Q('#mem')) Q('#mem').textContent = n ? n.toLocaleString() : '-'; }); },
-  work() {
-    let c = 'All', s = '';
+  work(a) {
+    let c = a && a[0] === '~' ? decodeURIComponent(a.slice(1)) : 'All', s = '';
     const draw = () => {
       const l = D.projects.filter(p => (c === 'All' || p.cat === c) && (p.name + ' ' + p.short + ' ' + (p.tags || []).join(' ')).toLowerCase().includes(s));
       Q('#chips').innerHTML = ['All', ...D.categories].map(x => `<button aria-pressed="${x === c}" data-c="${E(x)}">${E(x)}<sup>${x === 'All' ? D.projects.length : D.projects.filter(p => p.cat === x).length}</sup></button>`).join('');
@@ -59,6 +71,12 @@ const B = {
     Q('#chips').onclick = e => { const b = e.target.closest('[data-c]'); if (b) { c = b.dataset.c; draw(); } };
     Q('#q').oninput = e => { s = e.target.value.trim().toLowerCase(); draw(); };
     draw();
+  },
+  status() {
+    const el = Q('#srv'); if (!el) return;
+    const line = (s, i, rc, c) => `<span class="n">${pad(i + 1)}</span><span class="rn">${E(s.name)}<small>${E(s.ip)}</small></span><span class="rc">${rc}</span><span class="st ${c}">${c === 'live' ? 'Online' : c === 'done' ? 'Offline' : 'Checking'}</span><span></span>`;
+    el.innerHTML = D.servers.map((s, i) => `<div class="row srv" id="s${i}">${line(s, i, '', 'plan')}</div>`).join('');
+    D.servers.forEach((s, i) => fetch('https://api.mcsrvstat.us/3/' + encodeURIComponent(s.ip)).then(r => r.json()).then(j => { const e = Q('#s' + i); if (e) e.innerHTML = line(s, i, j.online ? (j.players ? j.players.online + ' / ' + j.players.max + ' players' : 'Online') : '', j.online ? 'live' : 'done'); }).catch(() => { const e = Q('#s' + i); if (e) e.innerHTML = line(s, i, 'Unavailable', 'done'); }));
   },
   proj(s) { const p = D.projects.find(x => x.slug === s); if (p) load(p).then(n => { if (n && Q('#pm')) Q('#pm').textContent = n.toLocaleString() + ' members'; }); },
   journal() {
@@ -88,9 +106,29 @@ const B = {
   }
 };
 
-Q('#nav').innerHTML = [['work', 'Work'], ['journal', 'Journal'], ['events', 'Events'], ['people', 'People']].map(([k, t], i) => `<a href="#/${k}" data-k="${k}"><i>${pad(i + 1)}</i>${t}</a>`).join('');
+const NAV = [['work', 'Work'], ['journal', 'Journal'], ['events', 'Events'], ['people', 'People'], ['studio', 'Studio'], ['careers', 'Careers'], ['status', 'Status']];
+Q('#nav').innerHTML = NAV.map(([k, t], i) => `<a href="#/${k}" data-k="${k}"><i>${pad(i + 1)}</i>${t}</a>`).join('');
+const pal = Q('#pal'), pi = Q('#pi'), pl = Q('#pl'); let sel = 0, res = [];
+const items = () => [
+  ...D.projects.map(p => ({ t: p.name, s: p.cat, h: '#/work/' + p.slug })),
+  ...NAV.map(([k, t]) => ({ t, s: 'Page', h: '#/' + k })),
+  ...D.news.map(n => ({ t: n.title, s: 'Journal', h: '#/journal' })),
+  ...D.team.map(m => ({ t: m.name, s: m.role, h: '#/people' })),
+  { t: 'Customize the site', s: 'Action', a: () => Q('#cz').click() },
+  { t: 'Follow on X', s: 'Link', h: U(D.social.x) }, { t: 'Join our Discord', s: 'Link', h: U(D.social.discord) }
+];
+const find = () => { const q = pi.value.trim().toLowerCase(); res = items().filter(i => (i.t + ' ' + i.s).toLowerCase().includes(q)).slice(0, 8); sel = Math.max(0, Math.min(sel, res.length - 1)); pl.innerHTML = res.map((i, k) => `<button data-i="${k}" aria-selected="${k === sel}"><b>${E(i.t)}</b><span>${E(i.s)}</span></button>`).join('') || '<p class="empty">No matches.</p>'; };
+const closePal = () => { pal.hidden = true; };
+const openPal = () => { pal.hidden = false; pi.value = ''; sel = 0; find(); pi.focus(); };
+const go = i => { closePal(); if (i.a) i.a(); else if (i.h[0] === '#') location.hash = i.h; else open(i.h, '_blank', 'noopener'); };
+pi.oninput = () => { sel = 0; find(); };
+pl.onclick = e => { const b = e.target.closest('[data-i]'); if (b) go(res[+b.dataset.i]); };
+pal.onclick = e => { if (e.target === pal) closePal(); };
+pi.onkeydown = e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + res.length) % res.length; find(); } else if (e.key === 'Enter' && res[sel]) go(res[sel]); };
+Q('#sk').onclick = openPal;
+addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPal(); } else if (e.key === 'Escape' && !pal.hidden) closePal(); });
 function route() {
-  const h = location.hash.slice(2).split('/'), v = h[0] || 'home', d = v === 'work' && h[1], ok = Object.hasOwn(V, v) && v !== 'proj';
+  const h = location.hash.slice(2).split('/'), v = h[0] || 'home', d = v === 'work' && h[1] && h[1][0] !== '~' && h[1], ok = Object.hasOwn(V, v) && v !== 'proj';
   Q('#main').innerHTML = d ? V.proj(h[1]) : ok ? V[v]() : V.nf();
   const b = d ? B.proj : ok ? B[v] : null; if (b) b(h[1]);
   document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.k === v));

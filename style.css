@@ -133,3 +133,26 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none}
 .studio input[type=range]{padding:0;border:0;background:none;accent-color:var(--acc)}
 .studio textarea{font:.78rem/1.4 var(--mono)}
 .sb{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.sb .btn{padding:9px 14px;font-size:.82rem}
+
+.mis{font:400 clamp(1.6rem,3.4vw,2.6rem)/1.15 var(--serif);letter-spacing:-.02em;max-width:22em;margin:28px 0 8px}
+.divs,.vals{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:0 28px;margin-top:20px}
+.dv,.vals>div{display:block;padding:22px 0;border-top:1px solid var(--line);text-decoration:none}
+.dv:hover{border-color:var(--acc)}
+.dv i{font:500 .76rem var(--mono);font-style:normal;color:var(--at)}
+.dv h3,.vals h4,.tl h4{font:400 1.35rem/1.2 var(--serif);margin-top:6px}
+.dv p,.vals p,.tl p{color:var(--mut);margin-top:6px}
+.tl{display:grid;grid-template-columns:90px 1fr;gap:20px;padding:18px 0;border-top:1px solid var(--line)}
+.tl b{font:500 .9rem var(--mono);color:var(--at)}
+.kit a{margin-right:20px;color:var(--at);font-weight:600}
+.srv .rc{color:var(--fg)}
+.pal{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.55);display:grid;justify-items:center;align-content:start;padding-top:14vh}
+.pal[hidden]{display:none}
+.pb{width:min(600px,92vw);background:var(--bg);border:1px solid var(--line);border-radius:var(--r);box-shadow:0 30px 80px rgba(0,0,0,.5);overflow:hidden}
+.pb input{border:0;border-bottom:1px solid var(--line);border-radius:0;padding:18px;font-size:1.1rem;background:transparent}
+#pl button{display:flex;justify-content:space-between;gap:16px;width:100%;padding:12px 18px;background:none;border:0;color:var(--fg);font:inherit;cursor:pointer;text-align:left}
+#pl button[aria-selected=true]{background:var(--acc);color:var(--on)}
+#pl span{font:500 .74rem var(--mono);opacity:.7}
+#pl .empty{padding:18px;border:0}
+.sk{display:flex;gap:10px;align-items:center}.sk::before{display:none}
+.sk kbd{font:500 .68rem var(--mono);color:var(--mut);border:1px solid var(--line);padding:1px 5px;border-radius:3px}
+@media(max-width:860px){.sk kbd{display:none}.tl{grid-template-columns:60px 1fr}}
