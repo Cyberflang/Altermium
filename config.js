@@ -8,11 +8,14 @@ window.SITE = {
   categories: ["Plugins", "Mods", "Servers", "Games", "Apps", "Communities"],
   status: { live: "Live", dev: "In development", plan: "Planned", done: "Archived" },
   // Default look for every visitor. Visitors can change it in Customize; copy the snippet from there to change the default.
-  theme: { mode: "dark", accent: "#ff5a36", tint: 8, radius: 4, font: "serif", density: "1", fx: "glow", motion: "on" },
+  theme: { mode: "dark", accent: "#ff5a36", tint: 8, radius: 4, font: "serif", density: "1", fx: "stars", motion: "on" },
   presets: [
     { n: "Ember", c: "#ff5a36" }, { n: "Aurora", c: "#2dd4bf" }, { n: "Ocean", c: "#3b82f6" }, { n: "Violet", c: "#8b5cf6" },
-    { n: "Forest", c: "#22c55e" }, { n: "Sakura", c: "#f472b6" }, { n: "Gold", c: "#f5b301" }, { n: "Crimson", c: "#e11d48" }
+    { n: "Forest", c: "#22c55e" }, { n: "Sakura", c: "#f472b6" }, { n: "Gold", c: "#f5b301" }, { n: "Crimson", c: "#e11d48" },
+    { n: "Sunset", c: "#fb923c" }, { n: "Cyan", c: "#22d3ee" }, { n: "Lime", c: "#a3e635" }, { n: "Magenta", c: "#d946ef" }
   ],
+  // Words that rotate in the home page intro line.
+  words: ["games", "mods", "servers", "communities", "apps", "worlds"],
   mission: "Build worlds people want to live in, and the communities that keep them alive.",
   divisions: [
     { name: "Plugins and Mods", text: "Server software and game modifications for Minecraft networks.", cats: ["Plugins", "Mods"] },

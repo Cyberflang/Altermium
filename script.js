@@ -7,7 +7,7 @@ const fd = d => new Date(d + (d.length === 10 ? 'T00:00' : '')).toLocaleDateStri
 const ST = k => `<span class="st ${E(k)}">${E(D.status[k] || k)}</span>`;
 const cd = ms => { const m = Math.max(0, Math.floor(ms / 6e4)), d = Math.floor(m / 1440), h = Math.floor(m % 1440 / 60); return d ? `${d}d ${h}h` : h ? `${h}h ${m % 60}m` : `${m}m`; };
 const MC = {};
-const load = p => p.invite ? (MC[p.slug] ||= fetch('https://discord.com/api/v9/invites/' + p.invite + '?with_counts=true').then(r => r.json()).then(j => j.approximate_member_count || null).catch(() => null)) : Promise.resolve(null);
+const load = p => p.invite ? (MC[p.slug] ||= fetch('https://discord.com/api/v9/invites/' + p.invite + '?with_counts=true').then(r => r.json()).then(j => [j.approximate_member_count || 0, j.approximate_presence_count || 0]).catch(() => null)) : Promise.resolve(null);
 const posts = () => [...D.news].sort((a, b) => (b.pin ? 1 : 0) - (a.pin ? 1 : 0) || new Date(b.date) - new Date(a.date));
 const evs = () => { const n = Date.now(), t = e => new Date(e.date).getTime(); return { up: D.events.filter(e => t(e) >= n).sort((a, b) => t(a) - t(b)), past: D.events.filter(e => t(e) < n).sort((a, b) => t(b) - t(a)) }; };
 const H = (n, t, x = '') => `<div class="sh"><h2><i>${n}</i>${t}</h2>${x}</div>`;
@@ -28,8 +28,9 @@ const FORMS = {
 const V = {
   home() {
     const { up } = evs(), cats = D.categories.filter(c => D.projects.some(p => p.cat === c));
-    return `<section class="w hero"><div><p class="lab">Games / Mods / Servers / Communities</p><h1>${E(D.tagline)}</h1><p class="lead">${E(D.about)}</p><p class="cta"><a class="btn" href="#/work">See our work</a><a class="btn ghost" href="${E(U(D.social.x))}" rel="noopener">Follow on X</a></p></div><div class="mark"><img src="images/logo-t.png" alt=""></div></section>
-<section class="w stats"><div><b>${D.projects.length}</b>projects</div><div><b>${cats.length}</b>categories</div><div><b id="mem">&hellip;</b>community members</div><div><b>${up.length}</b>upcoming events</div></section>
+    return `<section class="w hero"><div><p class="lab rot">Altermium builds <b id="rw">${E(D.words[0])}</b></p><h1>${E(D.tagline)}</h1><p class="lead">${E(D.about)}</p><p class="cta"><a class="btn" href="#/work">See our work</a><a class="btn ghost" href="${E(U(D.social.x))}" rel="noopener">Follow on X</a></p></div><div class="mark"><img src="images/logo-t.png" alt=""></div></section>
+<div class="tick" aria-hidden="true"><div>${D.categories.map(c => `<span>${E(c)}</span><span>/</span>`).join('').repeat(8)}</div></div>
+<section class="w stats"><div><b>${D.projects.length}</b>projects</div><div><b id="onl">&hellip;</b>online now</div><div><b id="mem">&hellip;</b>community members</div><div><b>${up.length}</b>upcoming events</div></section>
 <section class="w sec">${H('01', 'Work', '<a href="#/work">All work</a>')}<div>${D.projects.slice(0, 6).map(row).join('')}</div></section>
 <section class="w sec cols"><div>${H('02', 'Journal', '<a href="#/journal">All posts</a>')}${posts().slice(0, 3).map(post).join('')}</div><div>${H('03', 'Events', '<a href="#/events">All events</a>')}${up.length ? up.slice(0, 2).map(e => ev(e)).join('') : '<p class="empty">No events scheduled yet.</p>'}</div></section>
 <section class="w sec">${H('05', 'Studio', '<a href="#/studio">About the studio</a>')}${divs()}</section>`;
@@ -39,7 +40,7 @@ const V = {
     const p = D.projects.find(x => x.slug === s); if (!p) return V.nf();
     const f = (p.features || []).length ? `<h3 class="sub">Features</h3><ul class="ft">${p.features.map(x => `<li>${E(x)}</li>`).join('')}</ul>` : '';
     const lg = (p.log || []).length ? `<h3 class="sub">Changelog</h3>${p.log.map(l => `<div class="lg"><b>${E(l.v)}</b><time>${E(l.date || '')}</time><p>${E(l.text)}</p></div>`).join('')}` : '';
-    return `<article class="w sec proj"><a class="back" href="#/work">All work</a><p class="lab" style="margin-top:28px">${E(p.cat)}</p><h1>${E(p.name)}</h1><div class="meta">${ST(p.status)}<span>${E(p.year)}</span>${(p.tags || []).map(t => `<span class="tag">${E(t)}</span>`).join('')}</div><div class="cols"><div><p class="lead">${E(p.desc)}</p>${f}${lg}</div><aside>${p.image ? `<div class="shot" style="--c:${E(p.color || '#222')}"><img src="${E(p.image)}" alt="" style="object-fit:${p.fit === 'contain' ? 'contain' : 'cover'}"></div>` : ''}${p.link ? `<a class="btn" href="${E(U(p.link))}" rel="noopener">${p.cat === 'Communities' ? 'Join on Discord' : 'Open project'}</a>` : ''}<p class="em" id="pm"></p></aside></div></article>`;
+    return `<article class="w sec proj"><a class="back" href="#/work">All work</a><p class="lab" style="margin-top:28px">${E(p.cat)}</p><h1>${E(p.name)}</h1><div class="meta">${ST(p.status)}<span>${E(p.year)}</span>${(p.tags || []).map(t => `<span class="tag">${E(t)}</span>`).join('')}</div><div class="cols"><div><p class="lead">${E(p.desc)}</p>${f}${lg}</div><aside>${p.image ? `<div class="shot" style="--c:${E(p.color || '#222')}"><img src="${E(p.image)}" alt="" loading="lazy" decoding="async" style="object-fit:${p.fit === 'contain' ? 'contain' : 'cover'}"></div>` : ''}${p.link ? `<a class="btn" href="${E(U(p.link))}" rel="noopener">${p.cat === 'Communities' ? 'Join on Discord' : 'Open project'}</a>` : ''}<p class="em" id="pm"></p></aside></div></article>`;
   },
   journal() { return `<section class="w sec">${H('02', 'Journal')}<div class="chips" id="chips"></div><div id="list"></div></section>`; },
   events() { const { up, past } = evs(); return `<section class="w sec">${H('03', 'Events')}${up.length ? up.map(e => ev(e)).join('') : '<p class="empty">No events scheduled. New events are announced here and on X first.</p>'}${past.length ? `<h3 class="sub">Past</h3>${past.map(e => ev(e, 1)).join('')}` : ''}</section>`; },
@@ -60,7 +61,10 @@ const V = {
 };
 
 const B = {
-  home() { Promise.all(D.projects.map(load)).then(a => { const n = a.reduce((s, x) => s + (x || 0), 0); if (Q('#mem')) Q('#mem').textContent = n ? n.toLocaleString() : '-'; }); },
+  home() {
+    Promise.all(D.projects.map(load)).then(a => { const n = a.reduce((s, x) => s + (x ? x[0] : 0), 0), o = a.reduce((s, x) => s + (x ? x[1] : 0), 0); if (Q('#mem')) Q('#mem').textContent = n ? n.toLocaleString() : '-'; if (Q('#onl')) Q('#onl').textContent = o ? o.toLocaleString() : '-'; });
+    let i = 0; tm = setInterval(() => { const w = Q('#rw'); if (!w || root.dataset.motion === 'off') return; w.style.opacity = 0; setTimeout(() => { i = (i + 1) % D.words.length; w.textContent = D.words[i]; w.style.opacity = 1; }, 300); }, 2400);
+  },
   work(a) {
     let c = a && a[0] === '~' ? decodeURIComponent(a.slice(1)) : 'All', s = '';
     const draw = () => {
@@ -78,7 +82,7 @@ const B = {
     el.innerHTML = D.servers.map((s, i) => `<div class="row srv" id="s${i}">${line(s, i, '', 'plan')}</div>`).join('');
     D.servers.forEach((s, i) => fetch('https://api.mcsrvstat.us/3/' + encodeURIComponent(s.ip)).then(r => r.json()).then(j => { const e = Q('#s' + i); if (e) e.innerHTML = line(s, i, j.online ? (j.players ? j.players.online + ' / ' + j.players.max + ' players' : 'Online') : '', j.online ? 'live' : 'done'); }).catch(() => { const e = Q('#s' + i); if (e) e.innerHTML = line(s, i, 'Unavailable', 'done'); }));
   },
-  proj(s) { const p = D.projects.find(x => x.slug === s); if (p) load(p).then(n => { if (n && Q('#pm')) Q('#pm').textContent = n.toLocaleString() + ' members'; }); },
+  proj(s) { const p = D.projects.find(x => x.slug === s); if (p) load(p).then(n => { if (n && Q('#pm')) Q('#pm').textContent = n[0].toLocaleString() + ' members / ' + n[1].toLocaleString() + ' online'; }); },
   journal() {
     let t = 'All';
     const draw = () => {
@@ -127,18 +131,25 @@ pal.onclick = e => { if (e.target === pal) closePal(); };
 pi.onkeydown = e => { if (e.key === 'ArrowDown' || e.key === 'ArrowUp') { e.preventDefault(); sel = (sel + (e.key === 'ArrowDown' ? 1 : -1) + res.length) % res.length; find(); } else if (e.key === 'Enter' && res[sel]) go(res[sel]); };
 Q('#sk').onclick = openPal;
 addEventListener('keydown', e => { if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') { e.preventDefault(); openPal(); } else if (e.key === 'Escape' && !pal.hidden) closePal(); });
+let tm;
+const rv = () => {
+  if (root.dataset.motion === 'off' || !('IntersectionObserver' in window)) return;
+  const io = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px' });
+  document.querySelectorAll('.row,.post,.ev,.dv,.tm,.vals>div,.tl,.stats>div').forEach(el => { el.classList.add('rv'); io.observe(el); });
+};
 function route() {
+  clearInterval(tm);
   const h = location.hash.slice(2).split('/'), v = h[0] || 'home', d = v === 'work' && h[1] && h[1][0] !== '~' && h[1], ok = Object.hasOwn(V, v) && v !== 'proj';
   Q('#main').innerHTML = d ? V.proj(h[1]) : ok ? V[v]() : V.nf();
   const b = d ? B.proj : ok ? B[v] : null; if (b) b(h[1]);
   document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.k === v));
   document.title = (v === 'home' || !ok ? '' : v[0].toUpperCase() + v.slice(1) + ' / ') + D.name;
-  scrollTo(0, 0);
+  scrollTo(0, 0); rv();
 }
 const KEY = 'altermium:theme', root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)'), st = Q('#studio');
 const OPT = [
   ['mode', 'Mode', [['dark', 'Dark'], ['light', 'Light'], ['auto', 'Auto']]],
-  ['fx', 'Background', [['none', 'Plain'], ['glow', 'Glow'], ['grid', 'Grid'], ['noise', 'Grain'], ['spot', 'Spotlight']]],
+  ['fx', 'Background', [['none', 'Plain'], ['stars', 'Stars'], ['glow', 'Glow'], ['grid', 'Grid'], ['noise', 'Grain'], ['spot', 'Spotlight']]],
   ['font', 'Headings', [['serif', 'Serif'], ['sans', 'Sans'], ['mono', 'Mono'], ['round', 'Round']]],
   ['density', 'Spacing', [['0.75', 'Tight'], ['1', 'Normal'], ['1.3', 'Airy']]],
   ['motion', 'Motion', [['on', 'On'], ['off', 'Off']]]
@@ -147,12 +158,25 @@ let T = { ...D.theme };
 try { Object.assign(T, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
 const hex = c => /^#[0-9a-f]{6}$/i.test(c);
 const lum = h => { const c = h.slice(1).match(/../g).map(x => { x = parseInt(x, 16) / 255; return x <= .04 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4; }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+const cv = document.createElement('canvas'); cv.id = 'fx'; cv.setAttribute('aria-hidden', 'true'); document.body.prepend(cv);
+const cx = cv.getContext('2d'); let P = [], W = 0, HH = 0, raf = 0, mx = -1e3, my = -1e3, rt;
+const size = () => { const d = Math.min(devicePixelRatio || 1, 2); W = innerWidth; HH = innerHeight; cv.width = W * d; cv.height = HH * d; cx.setTransform(d, 0, 0, d, 0, 0); P = Array.from({ length: Math.min(90, Math.round(W * HH / 18000)) }, () => ({ x: Math.random() * W, y: Math.random() * HH, vx: (Math.random() - .5) * .25, vy: (Math.random() - .5) * .25, r: Math.random() * 1.4 + .4 })); };
+const frame = () => {
+  raf = 0; if (T.fx !== 'stars' || root.dataset.motion === 'off' || document.hidden) return;
+  cx.clearRect(0, 0, W, HH); cx.fillStyle = cx.strokeStyle = T.accent;
+  for (const p of P) { p.x += p.vx; p.y += p.vy; if (p.x < 0 || p.x > W) p.vx *= -1; if (p.y < 0 || p.y > HH) p.vy *= -1; const dx = p.x - mx, dy = p.y - my; if (dx * dx + dy * dy < 14000) { p.x += dx / 40; p.y += dy / 40; } cx.globalAlpha = .7; cx.beginPath(); cx.arc(p.x, p.y, p.r, 0, 6.283); cx.fill(); }
+  for (let i = 0; i < P.length; i++) for (let j = i + 1; j < P.length; j++) { const dx = P[i].x - P[j].x, dy = P[i].y - P[j].y, d = dx * dx + dy * dy; if (d < 11000) { cx.globalAlpha = (1 - d / 11000) * .35; cx.beginPath(); cx.moveTo(P[i].x, P[i].y); cx.lineTo(P[j].x, P[j].y); cx.stroke(); } }
+  raf = requestAnimationFrame(frame);
+};
+const fxSync = () => { const on = T.fx === 'stars' && root.dataset.motion !== 'off'; cv.style.display = on ? 'block' : 'none'; if (on && !raf) raf = requestAnimationFrame(frame); };
+size(); addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(size, 200); }); document.addEventListener('visibilitychange', fxSync);
 function apply() {
   if (!hex(T.accent)) T.accent = D.theme.accent;
   root.dataset.theme = T.mode === 'auto' ? (mq.matches ? 'dark' : 'light') : T.mode;
-  root.dataset.font = T.font; root.dataset.fx = T.fx; root.dataset.motion = T.motion;
+  root.dataset.font = T.font; root.dataset.fx = T.fx; root.dataset.motion = RM.matches ? 'off' : T.motion;
   const s = root.style; s.setProperty('--acc', T.accent); s.setProperty('--on', lum(T.accent) > .4 ? '#000' : '#fff');
-  s.setProperty('--tint', T.tint); s.setProperty('--r', T.radius + 'px'); s.setProperty('--d', T.density);
+  s.setProperty('--tint', T.tint); s.setProperty('--r', T.radius + 'px'); s.setProperty('--d', T.density); fxSync();
 }
 const save = () => { try { localStorage.setItem(KEY, JSON.stringify(T)); } catch (e) {} apply(); };
 const snip = () => 'theme: ' + JSON.stringify(T, null, 2) + ',';
@@ -188,9 +212,13 @@ st.onchange = e => { if (e.target.id === 'ch' && hex(e.target.value.trim())) { T
 Q('#cz').onclick = () => { st.hidden = !st.hidden; if (!st.hidden) paint(); };
 Q('#th').onclick = () => { T.mode = root.dataset.theme === 'dark' ? 'light' : 'dark'; save(); if (!st.hidden) paint(); };
 addEventListener('keydown', e => { if (e.key === 'Escape' && !st.hidden) closeSt(); });
-addEventListener('pointermove', e => { if (T.fx === 'spot') { root.style.setProperty('--mx', e.clientX + 'px'); root.style.setProperty('--my', e.clientY + 'px'); } });
+addEventListener('pointermove', e => { mx = e.clientX; my = e.clientY; if (T.fx === 'spot') { root.style.setProperty('--mx', e.clientX + 'px'); root.style.setProperty('--my', e.clientY + 'px'); } });
 mq.addEventListener('change', () => { if (T.mode === 'auto') apply(); });
 apply();
+try { if (!sessionStorage.getItem('alt-intro') && root.dataset.motion !== 'off') { sessionStorage.setItem('alt-intro', 1); const o = document.createElement('div'); o.className = 'intro'; o.innerHTML = '<img src="images/logo-t.png" alt="">'; document.body.append(o); setTimeout(() => o.remove(), 1800); } } catch (e) {}
+const pg = document.createElement('div'); pg.id = 'prog'; document.body.append(pg);
+addEventListener('scroll', () => { const h = root; pg.style.transform = 'scaleX(' + h.scrollTop / Math.max(1, h.scrollHeight - h.clientHeight) + ')'; }, { passive: true });
+if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
 Q('#foot').innerHTML = `<div class="fb"><img class="logo" src="images/logo-t.png" alt="">${E(D.name)}</div><div class="fl"><a href="${E(U(D.social.x))}" rel="noopener">X</a><a href="${E(U(D.social.discord))}" rel="noopener">Discord</a><a href="#/post">Post builder</a></div><small>&copy; 2026 ${E(D.name)}. Made by hand.</small>`;
 addEventListener('hashchange', route); route();
 setInterval(() => document.querySelectorAll('[data-ts]').forEach(s => s.textContent = cd(s.dataset.ts - Date.now())), 3e4);
