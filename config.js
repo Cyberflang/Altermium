@@ -7,6 +7,12 @@ window.SITE = {
   social: { x: "https://x.com/AltermiumTeam", discord: "https://discord.gg/Au4Mx7CaCq" },
   categories: ["Plugins", "Mods", "Servers", "Games", "Apps", "Communities"],
   status: { live: "Live", dev: "In development", plan: "Planned", done: "Archived" },
+  // Default look for every visitor. Visitors can change it in Customize; copy the snippet from there to change the default.
+  theme: { mode: "dark", accent: "#ff5a36", tint: 8, radius: 4, font: "serif", density: "1", fx: "glow", motion: "on" },
+  presets: [
+    { n: "Ember", c: "#ff5a36" }, { n: "Aurora", c: "#2dd4bf" }, { n: "Ocean", c: "#3b82f6" }, { n: "Violet", c: "#8b5cf6" },
+    { n: "Forest", c: "#22c55e" }, { n: "Sakura", c: "#f472b6" }, { n: "Gold", c: "#f5b301" }, { n: "Crimson", c: "#e11d48" }
+  ],
   // Rank prefixes shown before names on the People page, in display order.
   ranks: { FOUNDER: "#ff5a36", DEV: "#6ab0ff", STAFF: "#8ddc7a" },
   projects: [

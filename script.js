@@ -97,9 +97,62 @@ function route() {
   document.title = (v === 'home' || !ok ? '' : v[0].toUpperCase() + v.slice(1) + ' / ') + D.name;
   scrollTo(0, 0);
 }
-const setTheme = t => { document.documentElement.dataset.theme = t; try { localStorage.setItem('alt-theme', t); } catch (e) {} };
-try { setTheme(localStorage.getItem('alt-theme') || 'dark'); } catch (e) {}
-Q('#th').onclick = () => setTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark');
+const KEY = 'altermium:theme', root = document.documentElement, mq = matchMedia('(prefers-color-scheme: dark)'), st = Q('#studio');
+const OPT = [
+  ['mode', 'Mode', [['dark', 'Dark'], ['light', 'Light'], ['auto', 'Auto']]],
+  ['fx', 'Background', [['none', 'Plain'], ['glow', 'Glow'], ['grid', 'Grid'], ['noise', 'Grain'], ['spot', 'Spotlight']]],
+  ['font', 'Headings', [['serif', 'Serif'], ['sans', 'Sans'], ['mono', 'Mono'], ['round', 'Round']]],
+  ['density', 'Spacing', [['0.75', 'Tight'], ['1', 'Normal'], ['1.3', 'Airy']]],
+  ['motion', 'Motion', [['on', 'On'], ['off', 'Off']]]
+];
+let T = { ...D.theme };
+try { Object.assign(T, JSON.parse(localStorage.getItem(KEY) || '{}')); } catch (e) {}
+const hex = c => /^#[0-9a-f]{6}$/i.test(c);
+const lum = h => { const c = h.slice(1).match(/../g).map(x => { x = parseInt(x, 16) / 255; return x <= .04 ? x / 12.92 : ((x + .055) / 1.055) ** 2.4; }); return .2126 * c[0] + .7152 * c[1] + .0722 * c[2]; };
+function apply() {
+  if (!hex(T.accent)) T.accent = D.theme.accent;
+  root.dataset.theme = T.mode === 'auto' ? (mq.matches ? 'dark' : 'light') : T.mode;
+  root.dataset.font = T.font; root.dataset.fx = T.fx; root.dataset.motion = T.motion;
+  const s = root.style; s.setProperty('--acc', T.accent); s.setProperty('--on', lum(T.accent) > .4 ? '#000' : '#fff');
+  s.setProperty('--tint', T.tint); s.setProperty('--r', T.radius + 'px'); s.setProperty('--d', T.density);
+}
+const save = () => { try { localStorage.setItem(KEY, JSON.stringify(T)); } catch (e) {} apply(); };
+const snip = () => 'theme: ' + JSON.stringify(T, null, 2) + ',';
+const sync = () => { const c = Q('#code'); if (c) c.value = snip(); };
+function paint() {
+  const sw = (D.presets || []).map(p => `<button type="button" class="swb" data-a="${E(p.c)}" aria-label="${E(p.n)}" title="${E(p.n)}" aria-pressed="${p.c.toLowerCase() === T.accent.toLowerCase()}" style="--c:${E(p.c)}"></button>`).join('');
+  st.innerHTML = `<div class="sth"><b>Customize</b><button type="button" id="sx" aria-label="Close">&times;</button></div>
+<h3>Accent colour</h3><div class="sw">${sw}</div><div class="cr"><input type="color" id="cc" value="${E(T.accent)}" aria-label="Custom colour"><input id="ch" value="${E(T.accent)}" maxlength="7" aria-label="Hex colour"></div>
+${OPT.map(([k, l, o]) => `<h3>${l}</h3><div class="seg">${o.map(([v, t]) => `<button type="button" data-k="${k}" data-v="${v}" aria-pressed="${String(T[k]) === v}">${t}</button>`).join('')}</div>`).join('')}
+<h3>Corners <output>${T.radius}px</output></h3><input type="range" min="0" max="28" value="${T.radius}" data-r="radius" aria-label="Corner radius">
+<h3>Background tint <output>${T.tint}%</output></h3><input type="range" min="0" max="20" value="${T.tint}" data-r="tint" aria-label="Background tint">
+<h3>Theme code</h3><textarea id="code" rows="7" spellcheck="false">${E(snip())}</textarea>
+<div class="sb"><button class="btn" type="button" id="cpy">Copy</button><button class="btn ghost" type="button" id="app">Apply pasted code</button><button class="btn ghost" type="button" id="rst">Reset</button></div>`;
+}
+const closeSt = () => { st.hidden = true; Q('#cz').focus(); };
+st.onclick = e => {
+  const b = e.target.closest('button'); if (!b) return;
+  if (b.id === 'sx') return closeSt();
+  if (b.dataset.a) T.accent = b.dataset.a;
+  else if (b.dataset.k) T[b.dataset.k] = b.dataset.v;
+  else if (b.id === 'cpy') { navigator.clipboard.writeText(Q('#code').value); b.textContent = 'Copied'; return; }
+  else if (b.id === 'app') { try { Object.assign(T, JSON.parse(Q('#code').value.match(/\{[\s\S]*\}/)[0])); } catch (x) { b.textContent = 'Invalid code'; return; } }
+  else if (b.id === 'rst') T = { ...D.theme };
+  else return;
+  save(); paint();
+};
+st.oninput = e => {
+  const t = e.target;
+  if (t.dataset.r) { T[t.dataset.r] = +t.value; t.previousElementSibling.lastElementChild.textContent = t.value + (t.dataset.r === 'radius' ? 'px' : '%'); save(); sync(); }
+  else if (t.id === 'cc') { T.accent = t.value; save(); Q('#ch').value = t.value; sync(); }
+};
+st.onchange = e => { if (e.target.id === 'ch' && hex(e.target.value.trim())) { T.accent = e.target.value.trim(); save(); paint(); } };
+Q('#cz').onclick = () => { st.hidden = !st.hidden; if (!st.hidden) paint(); };
+Q('#th').onclick = () => { T.mode = root.dataset.theme === 'dark' ? 'light' : 'dark'; save(); if (!st.hidden) paint(); };
+addEventListener('keydown', e => { if (e.key === 'Escape' && !st.hidden) closeSt(); });
+addEventListener('pointermove', e => { if (T.fx === 'spot') { root.style.setProperty('--mx', e.clientX + 'px'); root.style.setProperty('--my', e.clientY + 'px'); } });
+mq.addEventListener('change', () => { if (T.mode === 'auto') apply(); });
+apply();
 Q('#foot').innerHTML = `<div class="fb"><img class="logo" src="images/logo-t.png" alt="">${E(D.name)}</div><div class="fl"><a href="${E(U(D.social.x))}" rel="noopener">X</a><a href="${E(U(D.social.discord))}" rel="noopener">Discord</a><a href="#/post">Post builder</a></div><small>&copy; 2026 ${E(D.name)}. Made by hand.</small>`;
 addEventListener('hashchange', route); route();
 setInterval(() => document.querySelectorAll('[data-ts]').forEach(s => s.textContent = cd(s.dataset.ts - Date.now())), 3e4);
