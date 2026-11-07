@@ -4,11 +4,11 @@ window.SITE = {
   name: "Altermium",
   tagline: "We make games, mods, servers and the communities around them.",
   about: "Altermium is an independent team. We write Minecraft plugins and mods, run servers, build video games and apps, and look after the communities that grow around them.",
-  social: { x: "https://x.com/AltermiumTeam", discord: "https://discord.gg/Au4Mx7CaCq" },
+  social: { x: "https://x.com/AltermiumTeam", discord: "https://discord.gg/KwAmfyJsKp" },
   categories: ["Plugins", "Mods", "Servers", "Games", "Apps", "Communities"],
   status: { live: "Live", dev: "In development", plan: "Planned", done: "Archived" },
   // Default look for every visitor. Visitors can change it in Customize; copy the snippet from there to change the default.
-  theme: { mode: "dark", accent: "#ff5a36", tint: 4, radius: 6, font: "sans", density: "1", fx: "none", motion: "on" },
+  theme: { mode: "dark", accent: "#ff5a36", tint: 4, radius: 6, font: "sans", density: "1", fx: "aurora", motion: "on" },
   presets: [
     { n: "Ember", c: "#ff5a36" }, { n: "Aurora", c: "#2dd4bf" }, { n: "Ocean", c: "#3b82f6" }, { n: "Violet", c: "#8b5cf6" },
     { n: "Forest", c: "#22c55e" }, { n: "Sakura", c: "#f472b6" }, { n: "Gold", c: "#f5b301" }, { n: "Crimson", c: "#e11d48" },
@@ -32,7 +32,6 @@ window.SITE = {
   timeline: [
     { y: "2023", t: "Altermium goes online", x: "The Altermium account joins X in January 2023." },
     { y: "2026", t: "Cyflixel community established", x: "The official community for Cyflixel Minecraft players opens in May." },
-    { y: "2026", t: "Creativity community established", x: "A server for people who make things opens in October." },
     { y: "2026", t: "New Altermium website", x: "Projects, journal, events, people and server status in one place." }
   ],
   // How applying works (shown on Careers).
@@ -48,31 +47,17 @@ window.SITE = {
   // Rank prefixes shown before names on the People page, in display order.
   ranks: { FOUNDER: "#ff5a36", DEV: "#6ab0ff", STAFF: "#8ddc7a" },
   projects: [
-    { slug: "creativity", name: "Creativity", cat: "Communities", status: "live", year: 2026,
-      short: "A server where your creativity never ends.",
-      desc: "Share what you make, discuss ideas with other members and show the things you build. Open to everyone.",
-      tags: ["Discord", "Creative"], invite: "Au4Mx7CaCq", link: "https://discord.gg/Au4Mx7CaCq",
-      image: "images/creativity.webp", fit: "contain", color: "#C71F63",
-      features: ["Share your creations", "Talk through ideas with other members", "Open to everyone"], log: [] },
     { slug: "cyflixel", name: "Cyflixel", cat: "Communities", status: "live", year: 2026,
       short: "The official community for Cyflixel Minecraft players.",
       desc: "Get announcements and updates, join exclusive events and meet an active, welcoming community.",
       tags: ["Discord", "Minecraft"], invite: "KwAmfyJsKp", link: "https://discord.gg/KwAmfyJsKp",
       image: "images/cyflixel.webp", fit: "cover", color: "#1B4F8F",
-      features: ["Announcements and updates", "Exclusive events", "An active, welcoming community"], log: [] },
-    { slug: "cyflixel-rank", name: "Cyflixel Rank", cat: "Plugins", status: "live", year: 2026,
-      short: "Ranks, nicknames and parties for a BungeeCord network.",
-      desc: "Rank, nick and party plugin for the Cyflixel network. Player data is shared between proxies through MySQL, so ranks and parties follow players across the network.",
-      tags: ["Java", "BungeeCord", "MySQL"], features: ["Ranks with prefixes", "Nicknames", "Parties", "Player data shared across proxies"], log: [] },
-    { slug: "creativity-bot", name: "Creativity Bot", cat: "Apps", status: "live", year: 2026,
-      short: "The Discord bot inside the Creativity community.",
-      desc: "A Discord bot built with discord.js that runs the Creativity server with slash commands.",
-      tags: ["Discord", "Node.js"], features: ["Slash commands"], log: [] }
+      features: ["Announcements and updates", "Exclusive events", "An active, welcoming community"], log: [] }
   ],
   // Journal posts: date is YYYY-MM-DD. pin: true keeps a post first.
   news: [
     { title: "The new Altermium website is live", tag: "Update", date: "2026-11-04", pin: true, text: "One home for everything we make: our projects, announcements, events and the people behind them." },
-    { title: "Creativity and Cyflixel are open to everyone", tag: "Community", date: "2026-10-28", text: "Join Creativity to share what you make, or Cyflixel for Minecraft. Invites are on each project page." }
+    { title: "Cyflixel is open to everyone", tag: "Community", date: "2026-10-28", text: "Join Cyflixel for announcements, events and an active Minecraft community. The invite is on the project page." }
   ],
   // Events: date is YYYY-MM-DDTHH:MM in your local time. Past events move to the Past list.
   events: [],
