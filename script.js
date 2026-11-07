@@ -17,18 +17,10 @@ const ics = e => 'data:text/calendar;charset=utf-8,' + encodeURIComponent(`BEGIN
 const ev = (e, past) => { const t = new Date(e.date); return `<article class="ev${past ? ' past' : ''}"><div class="dt"><b>${pad(t.getDate())}</b>${t.toLocaleString('en-GB', { month: 'short' })}</div><div><h3>${E(e.title)}</h3>${e.text ? `<p>${E(e.text)}</p>` : ''}<p class="em">${t.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit' })}${e.where ? ' / ' + E(e.where) : ''}${past ? '' : ` / in <span data-ts="${t.getTime()}">${cd(t - Date.now())}</span>`}</p>${past ? '' : `<p class="ln">${e.link ? `<a href="${E(U(e.link))}" rel="noopener">Join</a>` : ''}<a href="${ics(e)}" download="${E(e.title)}.ics">Add to calendar</a></p>`}</div></article>`; };
 const divs = () => `<div class="divs">${D.divisions.map(d => `<a class="dv" href="#/work/~${encodeURIComponent(d.cats[0])}"><i>${D.projects.filter(p => d.cats.includes(p.cat)).length} projects</i><h3>${E(d.name)}</h3><p>${E(d.text)}</p></a>`).join('')}</div>`;
 const hue = s => { let h = 0; for (const c of String(s)) h = (h * 31 + c.charCodeAt(0)) >>> 0; return h; };
-const rnd = a => () => { a |= 0; a = a + 0x6D2B79F5 | 0; let t = Math.imul(a ^ a >>> 15, 1 | a); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; };
-const art = seed => {
-  const r = rnd(hue(seed)), s = 20, N = 6, c = []; let o = '';
-  for (let i = 0; i < N; i++) for (let j = 0; j < N; j++) c.push([i, j, Math.floor(r() * r() * 4.2)]);
-  c.sort((a, b) => a[0] + a[1] - b[0] - b[1]);
-  for (const [i, j, h] of c) { const x = (i - j) * s, yb = (i + j) * s / 2, yt = yb - (h + .6) * s, d = yb - yt; o += `<path class="l" d="M${x - s} ${yt + s / 2}l${s} ${s / 2}v${d}l${-s} ${-s / 2}z"/><path class="r" d="M${x + s} ${yt + s / 2}l${-s} ${s / 2}v${d}l${s} ${-s / 2}z"/><path class="t" d="M${x} ${yt}l${s} ${s / 2}l${-s} ${s / 2}l${-s} ${-s / 2}z"/>`; }
-  return `<svg viewBox="-125 -80 250 205" preserveAspectRatio="xMidYMid slice" aria-hidden="true">${o}</svg>`;
-};
 const col = p => p.color || `hsl(${hue(p.slug || p.title) % 360} 62% 52%)`;
-const pic = p => p.image ? `<img src="${E(p.image)}" alt="" loading="lazy" decoding="async" style="object-fit:${p.fit === 'contain' ? 'contain' : 'cover'}">` : art(p.slug);
+const pic = p => p.image ? `<img src="${E(p.image)}" alt="" loading="lazy" decoding="async" style="object-fit:${p.fit === 'contain' ? 'contain' : 'cover'}">` : `<span class="mono">${E(p.name[0])}</span>`;
 const card = (p, f) => `<a class="pc${f ? ' feat' : ''}" href="#/work/${E(p.slug)}"><div class="pa${p.image ? ' im' : ''}" style="--c:${E(col(p))}">${pic(p)}</div><div class="pt"><span class="pcat">${f ? 'Featured / ' : ''}${E(p.cat)}</span><h3>${E(p.name)}</h3><p>${E(p.short)}</p>${f ? '' : `<div class="pf">${ST(p.status)}<span>${E(p.year)}</span></div>`}</div></a>`;
-const nc = n => `<article class="nc"><div class="pa" style="--c:${E(col(n))}">${art(n.title)}</div><div class="pt"><span class="pcat">${E(n.tag)} / ${fd(n.date)}</span><h3>${E(n.title)}</h3><p>${E(n.text)}</p></div></article>`;
+const nc = n => `<article class="nc"><div class="pt"><span class="pcat">${E(n.tag)} / ${fd(n.date)}</span><h3>${E(n.title)}</h3><p>${E(n.text)}</p></div></article>`;
 const FORMS = {
   news: ['news', [['title', 'Title'], ['tag', 'Tag'], ['date', 'Date', 'date'], ['text', 'Text', 'area'], ['pin', 'Pinned', 'chk']]],
   event: ['events', [['title', 'Title'], ['date', 'Starts', 'datetime-local'], ['where', 'Where'], ['link', 'Link'], ['text', 'Text', 'area']]],
@@ -40,13 +32,14 @@ const FORMS = {
 
 const V = {
   home() {
-    const { up } = evs(), f = D.projects[0];
-    return `<section class="w hero2"><div><p class="lab">${E(D.name)}</p><h1>${E(D.tagline)}</h1><p class="lead">${E(D.about)}</p><p class="cta"><a class="btn" href="#/work">Explore our projects</a><a class="btn ghost" href="${E(U(D.social.discord))}" rel="noopener">Join our Discord</a></p></div>${f ? card(f, 1) : ''}</section>
-<section class="w stats"><div><b>${D.projects.length}</b>projects</div><div><b id="onl">&hellip;</b>online now</div><div><b id="mem">&hellip;</b>community members</div><div><b>${up.length}</b>upcoming events</div></section>
-<section class="w sec">${H('01', 'Projects', '<a href="#/work">All projects</a>')}<div class="pgrid">${D.projects.slice(0, 6).map(p => card(p)).join('')}</div></section>
-<section class="w sec">${H('02', 'Latest news', '<a href="#/journal">All news</a>')}<div class="pgrid">${posts().slice(0, 3).map(nc).join('')}</div></section>
-<section class="w sec cols"><div>${H('03', 'Events', '<a href="#/events">All events</a>')}${up.length ? up.slice(0, 2).map(e => ev(e)).join('') : '<p class="empty">No events scheduled yet.</p>'}</div><div class="band"><p class="lab">Join us</p><h2>Build the next thing with Altermium.</h2><p>We are looking for developers, builders, designers and moderators.</p><a class="btn" href="#/careers">See careers</a></div></section>
-<section class="w sec">${H('05', 'Studio', '<a href="#/studio">About the studio</a>')}${divs()}</section>`;
+    const { up } = evs(), lj = p => `<article class="lineup"><div class="pa${p.image ? ' im' : ''}" style="--c:${E(col(p))}">${pic(p)}</div><div><span class="pcat">${E(p.cat)}</span><h3>${E(p.name)}</h3><p>${E(p.desc)}</p><div class="ln">${ST(p.status)}<a class="btn sm" href="#/work/${E(p.slug)}">Learn more</a></div></div></article>`;
+    return `<section class="w hero2"><div><p class="lab">${E(D.name)}</p><h1>${E(D.tagline)}</h1><p class="lead">${E(D.about)}</p><p class="cta"><a class="btn" href="#/work">Explore our projects</a><a class="btn ghost" href="#/studio">About the studio</a></p></div><div class="keyart"><img src="images/logo-t.png" alt="Altermium logo"></div></section>
+<section class="w facts"><div><b>2023</b>Online since</div><div><b>${D.projects.length}</b>Projects</div><div><b id="mem">&hellip;</b>Community members</div><div><b id="onl">&hellip;</b>Online now</div></section>
+<section class="w mission"><p class="lab">Who we are</p><p>${E(D.mission)}</p><a href="#/studio">Learn about Altermium</a></section>
+<section class="w sec">${H('01', 'Our projects', '<a href="#/work">All projects</a>')}${D.projects.slice(0, 4).map(lj).join('')}</section>
+<section class="w sec">${H('02', 'What we believe')}<div class="vs">${D.values.map(v => `<div><h3>${E(v.title)}</h3><p>${E(v.text)}</p></div>`).join('')}</div></section>
+<section class="w sec">${H('03', 'Latest news', '<a href="#/journal">All news</a>')}<div class="pgrid">${posts().slice(0, 3).map(nc).join('')}</div></section>
+<section class="w sec cols"><div>${H('04', 'Events', '<a href="#/events">All events</a>')}${up.length ? up.slice(0, 2).map(e => ev(e)).join('') : '<p class="empty">No events scheduled yet.</p>'}</div><div class="band"><p class="lab">Careers</p><h2>Build the next thing with Altermium.</h2><p>We are looking for developers, builders, designers and moderators.</p><a class="btn" href="#/careers">See careers</a></div></section>`;
   },
   work() { return `<section class="w sec">${H('01', 'Work')}<div class="tools"><div class="chips" id="chips"></div><input id="q" type="search" placeholder="Search projects" aria-label="Search projects"></div><div class="pgrid" id="rows"></div></section>`; },
   proj(s) {
@@ -66,7 +59,7 @@ const V = {
   },
   careers() {
     const a = [['Developers', 'Java plugins, mods, bots and web.'], ['Builders', 'Maps, lobbies, arenas and worlds.'], ['Designers', 'Interfaces, art, logos and trailers.'], ['Moderators', 'Keep our communities friendly and active.']];
-    return `<section class="w sec">${H('06', 'Careers')}<p class="mis">Help us build Altermium.</p><p class="lead">We grow by finding people who love making things. Pick the area that fits you and say hello in our Discord.</p><div class="vals">${a.map(x => `<div><h4>${x[0]}</h4><p>${x[1]}</p></div>`).join('')}</div><h3 class="sub">Open roles</h3>${D.roles.length ? D.roles.map(r => `<article class="post"><div class="pd"><span class="tg">${E(r.team)}</span><span>${E(r.type)}</span></div><div><h3>${E(r.title)}</h3><p>${E(r.text)}</p>${r.link ? `<p class="ln"><a href="${E(U(r.link))}" rel="noopener">Apply</a></p>` : ''}</div></article>`).join('') : '<p class="empty">No specific roles are open right now, but we always want to hear from builders.</p>'}<p class="cta"><a class="btn" href="${E(U(D.social.discord))}" rel="noopener">Join our Discord</a><a class="btn ghost" href="${E(U(D.social.x))}" rel="noopener">Message us on X</a></p></section>`;
+    return `<section class="w sec">${H('06', 'Careers')}<p class="mis">Help us build Altermium.</p><p class="lead">We grow by finding people who love making things. Pick the area that fits you and say hello in our Discord.</p><div class="vals">${a.map(x => `<div><h4>${x[0]}</h4><p>${x[1]}</p></div>`).join('')}</div><h3 class="sub">How it works</h3><div class="vals">${D.steps.map((x, i) => `<div><h4>${i + 1}. ${E(x.title)}</h4><p>${E(x.text)}</p></div>`).join('')}</div><h3 class="sub">Open roles</h3>${D.roles.length ? D.roles.map(r => `<article class="post"><div class="pd"><span class="tg">${E(r.team)}</span><span>${E(r.type)}</span></div><div><h3>${E(r.title)}</h3><p>${E(r.text)}</p>${r.link ? `<p class="ln"><a href="${E(U(r.link))}" rel="noopener">Apply</a></p>` : ''}</div></article>`).join('') : '<p class="empty">No specific roles are open right now, but we always want to hear from builders.</p>'}<p class="cta"><a class="btn" href="${E(U(D.social.discord))}" rel="noopener">Join our Discord</a><a class="btn ghost" href="${E(U(D.social.x))}" rel="noopener">Message us on X</a></p></section>`;
   },
   status() { return `<section class="w sec">${H('07', 'Status')}${D.servers.length ? '<div id="srv"></div>' : '<p class="empty">No servers listed yet. Add your server address to the servers list in config.js and live player counts will show here.</p>'}</section>`; },
   post() { return `<section class="w sec">${H('08', 'Post builder')}<p class="lead">Fill in the form, copy the snippet and paste it into the matching list in <code>config.js</code>, then push to GitHub.</p><div class="builder"><form id="bf"></form><div><pre id="out"></pre><button class="btn" id="cp" type="button">Copy snippet</button><p class="em" id="where"></p></div></div></section>`; },
@@ -211,6 +204,7 @@ mq.addEventListener('change', () => { if (T.mode === 'auto') apply(); });
 apply();
 if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) navigator.serviceWorker.register('sw.js').catch(() => {});
 Q('#foot').innerHTML = `<div class="fc"><div><div class="fb"><img class="logo" src="images/logo-t.png" alt="">${E(D.name)}</div><p>${E(D.about)}</p></div><div><h4>Explore</h4>${NAV.map(([k, t]) => `<a href="#/${k}">${t}</a>`).join('')}</div><div><h4>Community</h4>${D.projects.filter(p => p.cat === 'Communities').map(p => `<a href="#/work/${E(p.slug)}">${E(p.name)}</a>`).join('')}<a href="${E(U(D.social.discord))}" rel="noopener">Discord</a></div><div><h4>Follow</h4><a href="${E(U(D.social.x))}" rel="noopener">X</a><a href="#/careers">Careers</a><a href="#/post">Post builder</a></div></div><small>&copy; 2026 ${E(D.name)}. All rights reserved.</small>`;
+Q('#jd').href = U(D.social.discord);
 addEventListener('hashchange', route); route();
 setInterval(() => document.querySelectorAll('[data-ts]').forEach(s => s.textContent = cd(s.dataset.ts - Date.now())), 3e4);
 })();

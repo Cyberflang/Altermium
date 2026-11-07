@@ -8,7 +8,7 @@ window.SITE = {
   categories: ["Plugins", "Mods", "Servers", "Games", "Apps", "Communities"],
   status: { live: "Live", dev: "In development", plan: "Planned", done: "Archived" },
   // Default look for every visitor. Visitors can change it in Customize; copy the snippet from there to change the default.
-  theme: { mode: "dark", accent: "#ff5a36", tint: 5, radius: 10, font: "sans", density: "1", fx: "none", motion: "on" },
+  theme: { mode: "dark", accent: "#ff5a36", tint: 4, radius: 6, font: "sans", density: "1", fx: "none", motion: "on" },
   presets: [
     { n: "Ember", c: "#ff5a36" }, { n: "Aurora", c: "#2dd4bf" }, { n: "Ocean", c: "#3b82f6" }, { n: "Violet", c: "#8b5cf6" },
     { n: "Forest", c: "#22c55e" }, { n: "Sakura", c: "#f472b6" }, { n: "Gold", c: "#f5b301" }, { n: "Crimson", c: "#e11d48" },
@@ -34,6 +34,12 @@ window.SITE = {
     { y: "2026", t: "Cyflixel community established", x: "The official community for Cyflixel Minecraft players opens in May." },
     { y: "2026", t: "Creativity community established", x: "A server for people who make things opens in October." },
     { y: "2026", t: "New Altermium website", x: "Projects, journal, events, people and server status in one place." }
+  ],
+  // How applying works (shown on Careers).
+  steps: [
+    { title: "Get acquainted", text: "Tell us what you have built, a server you run or a plugin you wrote. No long cover letter needed." },
+    { title: "Talk with the team", text: "We chat in Discord about what you want to work on and where we need help." },
+    { title: "Start small", text: "You begin with a small task, and we grow from there." }
   ],
   // Open roles: { title, team, type, text, link }. Leave empty if none.
   roles: [],

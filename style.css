@@ -184,3 +184,30 @@ svg .t{fill:color-mix(in oklab,var(--c),#fff 32%)}svg .l{fill:var(--c)}svg .r{fi
 .fc a{display:block;padding:4px 0;text-decoration:none;color:var(--fg)}.fc a:hover{color:var(--at)}
 .fi{display:block}.fi small{display:block;margin-top:36px}
 @media(max-width:860px){.hero2{grid-template-columns:1fr}.fc{grid-template-columns:1fr 1fr}}
+
+.pa{background:color-mix(in oklab,var(--c) 22%,var(--bg))}
+.pa .mono{display:grid;place-items:center;width:100%;height:100%;font:800 clamp(4rem,10vw,7rem)/1 var(--disp);color:color-mix(in oklab,var(--c) 70%,#fff)}
+.pc:hover{transform:none}
+.btn.sm{padding:9px 16px;font-size:.88rem}
+.keyart{aspect-ratio:5/4;display:grid;place-items:center;border:1px solid var(--line);border-radius:calc(var(--r) + 4px);background-color:color-mix(in oklab,var(--acc) 12%,var(--bg));background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);background-size:40px 40px}
+.keyart img{width:46%}
+[data-theme=light] .keyart img{filter:invert(1)}
+.facts{display:grid;grid-template-columns:repeat(4,1fr);border-block:1px solid var(--line)}
+.facts div{padding:26px 24px 26px 0;color:var(--mut);font:500 .85rem Inter,system-ui}
+.facts b{display:block;font:700 2.2rem/1.1 var(--disp);color:var(--fg);letter-spacing:-.02em}
+.mission{padding-block:calc(88px*var(--d))}
+.mission p:nth-child(2){font:700 clamp(1.8rem,4.2vw,3.4rem)/1.12 var(--disp);letter-spacing:-.03em;max-width:20em;margin-top:14px}
+.mission a{display:inline-block;margin-top:24px;color:var(--at);font-weight:600}
+.lineup{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:center;padding:40px 0;border-top:1px solid var(--line)}
+.lineup:nth-child(even) .pa{order:2}
+.lineup .pa{border-radius:calc(var(--r) + 4px);border:1px solid var(--line)}
+.lineup h3{font:700 2rem/1.15 var(--disp);letter-spacing:-.025em;margin:10px 0 12px}
+.lineup p{color:var(--mut);max-width:30em}
+.lineup .ln{margin-top:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.lineup .ln .btn{color:var(--bg);margin:0}
+.vs{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:32px;margin-top:28px}
+.vs>div{border-top:3px solid var(--acc);padding-top:18px}
+.vs h3{font:800 1.4rem/1.15 var(--disp);letter-spacing:-.01em;text-transform:uppercase}
+.vs p{color:var(--mut);margin-top:10px}
+#jd{margin-left:4px}
+@media(max-width:860px){.facts{grid-template-columns:1fr 1fr}.lineup{grid-template-columns:1fr;gap:24px}.lineup:nth-child(even) .pa{order:0}#jd{display:none}}
